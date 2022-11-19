@@ -1,5 +1,6 @@
-# pp_plotstonk
-the pp stands for personal project :>
+# Stonks Scripts
+
+A collection of harmless scripts related to stocks
 
 # Requirement
 matplotlib for the viz
