@@ -19,7 +19,6 @@ def cmd_help(update, context):
     update.message.reply_text(const.HELP_MSG) 
 
 def cmd_check_corr_with_SPY(update, context) -> None:
-    # call the api, get formatted text
     log_user_info(update)
     t = update.message.text.split(' ')
     if len(t) <2 or len(t[1]) < 3:
@@ -27,17 +26,19 @@ def cmd_check_corr_with_SPY(update, context) -> None:
         return
     ticker = t[1].upper() 
     _,_, avg = get_corrs.getCovs("SPY",ticker)
-    msg = getReccomend(avg)
+    msg = getReccomendationFromScore(avg)
     update.message.reply_text(msg)
     return 
 
-def getReccomend(score:int) -> str: 
+def getReccomendationFromScore(score:int) -> str:
+    if score == 1:
+        return f"We cant find data for this stock. Yamaete Kudasai D\":" 
     if score < 0.3:
-        return f"corr with SPY is {score:.3f}, it's good buy"
+        return f"Corr with SPY is {score:.3f}, it's good buy"
     if score < 0.6:
-        return f"corr with SPY is {score:.3f}, it's an ok buy"
+        return f"Corr with SPY is {score:.3f}, it's an ok buy"
     else:
-        return f"corr with SPY is {score:.3f}, it's not really a good buy"
+        return f"Corr with SPY is {score:.3f}, it's not really a good buy"
     
 def error(update, context):
     # just print the error
@@ -66,8 +67,6 @@ def main():
     updater.start_polling()
     logger.info(f'Bot started at {datetime.now().strftime("%Y/%m/%d %H:%M:%S")}')
     updater.idle()
-    
-
     
 if __name__ == "__main__":
     main()
