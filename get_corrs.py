@@ -37,5 +37,10 @@ def rankLeastCorrelated(tickers,target="SPY"):
 # add all the stocks you eyeing
 # this will find the least correlated with the SP500
 if __name__ == "__main__":
-    rankLeastCorrelated(["AAPL","BABA","AMD","VOO","QCOM","TSLA","MSFT","KO","GSK","COUR","DDOG","GOOGL","PFE",
-                    "SLX","SPYG","TWLO","VTI","VUG","NVDA"])
+    rankLeastCorrelated(["KO","PEP","MCD","SBUX","YUM","NESN.SW",
+                         "NOVN","PFE","ABBV","JNJ","SAN", "PFE","GSK",
+                         "TSM","IBM", "NVDA","QCOM","AMD",
+                         "AAPL","TSLA","MSFT","GOOGL","META","NFLX",
+                         "BABA","PDD","BILI","NTES","BIDU",
+                         "SLX","TWLO","COUR","DDOG",
+                         ])
