@@ -101,8 +101,8 @@ class WidgetFactory():
         
     def _create_widget(self,args:dict) ->QWidget:
         widget = QWidget()
-        layout = args[const.LAYOUT_OBJ] or QVBoxLayout()
-        childWidgets = args[const.CHILD_WIDGETS] or []
+        layout = args[const.LAYOUT_OBJ] 
+        childWidgets = args[const.CHILD_WIDGETS] 
         try: 
             col_ratios = args[const.CHILD_WIDGETS_COLUMN_RATIO]
             canAddRatio = True 
