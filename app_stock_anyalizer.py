@@ -139,7 +139,7 @@ class MainWindow(QMainWindow):
         interval = str(wc.GetWidget("dropdown_interval").currentText()) or const.DEFAULT_INTERVAL
         newData = yf.Ticker(ticker).history(period=period,interval=interval)[["High","Low","Open","Close"]]
         if len(newData) == 0:
-            return defaultData
+            return ticker,defaultData
         util.logger.info(f"get new data, ticker:{ticker},period:{period},interval:{interval}, shape: {newData.shape}")
         return ticker,newData
 
