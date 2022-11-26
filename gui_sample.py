@@ -1,12 +1,12 @@
 import sys
+import yfinance as yf, pandas as pd
+
 import matplotlib
-import yfinance as yf
 matplotlib.use('Qt5Agg')
-
-from PyQt5 import QtCore, QtWidgets
-
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+
+from PyQt5 import QtCore, QtWidgets
 
 
 class MplCanvas(FigureCanvasQTAgg):
@@ -38,9 +38,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas.axes.plot(data)
         self.setCentralWidget(self.widget)
         self.show()
+        
+    def pd_plot(self,df:pd.DataFrame):
+        df.plot(ax=self.canvas.axes)
+        self.setCentralWidget(self.widget)
+        self.show()
+        
 
 data = yf.Ticker("SPY").history(period="1y")
 app = QtWidgets.QApplication(sys.argv)
 w = MainWindow()
-w.simple_plot(data["High"])
+#w.simple_plot(data["High"])
+w.pd_plot(data[["Open","High","Low","Close"]])
 app.exec_()
