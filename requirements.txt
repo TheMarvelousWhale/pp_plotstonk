@@ -1,0 +1,5 @@
+matplotlib
+yfinance
+python-telegram-bot
+pyyaml
+PyQT5
