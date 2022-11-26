@@ -51,6 +51,9 @@ class MainWindow(QMainWindow):
                 wc.Add("anya_gif",const.WIDGET_TYPE_GIF,{
                     const.WIDGET_ARG_FILEPATH:"media/anya.gif"
                     }),
+                wc.Add("alert_msg",const.WIDGET_TYPE_LABEL,{
+                    const.WIDGET_ARG_LABEL_NAME: const.ALERT_NORMAL_TMPL.substitute(time=util.getDay())
+                    }),
                 wc.Add("label_ticker",const.WIDGET_TYPE_LABEL,{
                     const.WIDGET_ARG_LABEL_NAME:"Ticker"
                     }),
@@ -92,13 +95,13 @@ class MainWindow(QMainWindow):
                             const.LAYOUT_OBJ:QHBoxLayout(),
                             const.CHILD_WIDGETS:[
                                wc.Add("mean",const.WIDGET_TYPE_LABEL, {
-                                        const.WIDGET_ARG_LABEL_NAME:const.STATS_MEAN_TMPL.substitute(mean=defaultMean)
+                                        const.WIDGET_ARG_LABEL_NAME:const.STATS_MEAN_TMPL.substitute(mean=util.wrap3F(defaultMean))
                                     }),
                                wc.Add("sd",const.WIDGET_TYPE_LABEL,{
-                                        const.WIDGET_ARG_LABEL_NAME:const.STATS_SD_TMPL.substitute(sd=defaultSD)
+                                        const.WIDGET_ARG_LABEL_NAME:const.STATS_SD_TMPL.substitute(sd=util.wrap3F(defaultSD))
                                     }),
                                wc.Add("corr",const.WIDGET_TYPE_LABEL,{
-                                        const.WIDGET_ARG_LABEL_NAME:const.STAT_CORR_TMPL.substitute(corr=defaultCorr)
+                                        const.WIDGET_ARG_LABEL_NAME:const.STAT_CORR_TMPL.substitute(corr=util.wrap3F(defaultCorr))
                                     })
                             ]
                         })
@@ -119,6 +122,7 @@ class MainWindow(QMainWindow):
         
      
     def update_graph(self):
+
         # Trigger the canvas to update and redraw.
         wc = self.widgetCtrl
         graph =  wc.GetWidget("graph")
@@ -128,10 +132,12 @@ class MainWindow(QMainWindow):
         graph.canvas.axes.cla()
         graph.canvas.axes.plot(newData)
         graph.canvas.draw()
-        wc.GetWidget("mean").setText(const.STATS_MEAN_TMPL.substitute(mean=mean))
-        wc.GetWidget("sd").setText(const.STATS_SD_TMPL.substitute(sd=sd))
-        wc.GetWidget("corr").setText(const.STAT_CORR_TMPL.substitute(corr=corr))
-
+        wc.GetWidget("mean").setText(const.STATS_MEAN_TMPL.substitute(mean=util.wrap3F(mean)))
+        wc.GetWidget("sd").setText(const.STATS_SD_TMPL.substitute(sd=util.wrap3F(sd)))
+        wc.GetWidget("corr").setText(const.STAT_CORR_TMPL.substitute(corr=util.wrap3F(corr)))
+            
+            
+            
     def get_latest_data(self):
         wc = self.widgetCtrl
         ticker = str(wc.GetWidget("input_ticker").text()) or const.DEFAULT_TICKER 
@@ -141,14 +147,17 @@ class MainWindow(QMainWindow):
         if len(newData) == 0:
             self.handle_error()
             return ticker,defaultData
-        self.clear_error()
         util.logger.info(f"get new data, ticker:{ticker},period:{period},interval:{interval}, shape: {newData.shape}")
+        self.clear_error() 
         return ticker,newData
 
     def handle_error(self):
         self._set_anya_gif("media/anya_scared.gif")
+        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_ERROR_TMPL.substitute(msg="T^T"))
+        
     def clear_error(self):
         self._set_anya_gif("media/anya.gif")
+        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_NORMAL_TMPL.substitute(time=util.getDay()))
         
     def _set_anya_gif(self,path:str):
         wc = self.widgetCtrl
@@ -158,6 +167,7 @@ class MainWindow(QMainWindow):
         gif.setMovie(movie)
         gif.movie = movie
         movie.start()
+    
         
  
 if __name__ == "__main__":

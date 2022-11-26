@@ -13,9 +13,18 @@ matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from PyQt5.QtGui import QMovie
+from PyQt5.QtGui import QMovie, QFont
 from app_stock_anyalizer_util import logger 
 import app_stock_anyalizer_const as const 
+import app_stock_anyalizer_css as css 
+
+AnyaCSS = css.AnyaStyle()
+CSSAlterableTypes = [const.WIDGET_TYPE_LABEL,
+                     const.WIDGET_TYPE_INPUT_BOX,
+                     const.WIDGET_TYPE_DROPDOWN,
+                     const.WIDGET_TYPE_PUSHBTN
+                     ]
+
 
 class WidgetController():
     def __init__(self):
@@ -25,10 +34,12 @@ class WidgetController():
     def Add(self,name:str,type:str,args:dict)->QWidget:
         widget = self.widget_factory.Create(type,args)
         if widget == None:
-            logger.error("failed to create widget {name}")
+            logger.error(f"failed to create widget {name}")
             return None 
         if name in self.widgets:
-            logger.warn("widget {name} already exists")
+            logger.warn(f"widget {name} already exists")
+        if type in CSSAlterableTypes:
+            widget.setFont(AnyaCSS.GetDefaultFont())
         self.widgets[name] = widget
         return widget
 
@@ -60,7 +71,8 @@ class WidgetFactory():
     
     def _create_label(self,args:dict)->QWidget:
         labelName = args[const.WIDGET_ARG_LABEL_NAME] or const.DEFAULT_STRING 
-        return QLabel(labelName)
+        label = QLabel(labelName)
+        return label
     
     def _create_input_box(self,args:dict) ->QWidget:
         le = QLineEdit()

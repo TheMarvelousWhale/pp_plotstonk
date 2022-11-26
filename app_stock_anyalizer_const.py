@@ -1,7 +1,7 @@
 from string import Template 
 
 YML_FILE = "app_stock_anyalizer_conf.yml"
-
+CSS_FILE = "app_stock_anyalizer_css.yml"
 
 WIDGET_TYPE_LABEL = "label"
 WIDGET_ARG_LABEL_NAME = "label_name"
@@ -48,3 +48,9 @@ PERIOD_LIST = [
 STATS_MEAN_TMPL = Template("Mean Returns: $mean")
 STATS_SD_TMPL = Template("Std Dev: $sd")
 STAT_CORR_TMPL = Template("Corr w SPY: $corr")
+
+ALERT_NORMAL_TMPL = Template("おはよう $time")
+ALERT_ERROR_TMPL = Template("WAKARANAI!! $msg")
+
+CSS_DEFAULT_FONT_FAMILY = "default_font_family"
+CSS_DEFAULT_FONT_SIZE = "default_font_size"
