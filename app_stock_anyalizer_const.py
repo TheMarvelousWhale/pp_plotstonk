@@ -1,3 +1,5 @@
+from string import Template 
+
 YML_FILE = "app_stock_anyalizer_conf.yml"
 
 
@@ -18,7 +20,7 @@ LAYOUT_OBJ = "layout_obj"
 CHILD_WIDGETS = "child_widgets"
 CHILD_WIDGETS_COLUMN_RATIO = "col_ratio"
 
-WIDGET_TYPE_MPL = "mpl"
+WIDGET_TYPE_MPL_GRAPH = "mpl"
 MPL_PARENT_OBJ = "mpl_parent_obj"
 MPL_DATA = "mpl_data"
 MPL_GRAPH_WIDTH = "graph_width"
@@ -32,6 +34,7 @@ FUNC = "func"
 DEFAULT_TICKER = "SPY"
 DEFAULT_PERIOD = "1y"
 DEFAULT_INTERVAL = "1m"
+DEFAULT_STRING = "waku waku"
 
 INTERVAL_LIST = [
     "1m", "2m", "5m", "15m", "30m", "60m", "90m", 
@@ -42,3 +45,6 @@ PERIOD_LIST = [
     "10y", "ytd", "max"
 ]
 
+STATS_MEAN_TMPL = Template("Mean Returns: $mean")
+STATS_SD_TMPL = Template("Std Dev: $sd")
+STAT_CORR_TMPL = Template("Corr w SPY: $corr")

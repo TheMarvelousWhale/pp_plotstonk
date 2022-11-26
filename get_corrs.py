@@ -1,6 +1,12 @@
 import yfinance as yf
 import pandas as pd
 
+def get_mean_sd(data):
+    data["Avg"]=(data["Open"]+data["Close"])/2
+    mean = sum(data["Avg"])/len(data["Avg"])
+    sd = data["Avg"].std()
+    return mean, sd 
+
 def get60rollwindow(ticker,d={}):
     if ticker in d:
         data = d[ticker]
@@ -25,6 +31,10 @@ def getCovs(ta,tb):
     if len(x) == 0:
         return 1,1,1
     return max(x),min(x),sum(x)/len(x)
+
+def GetAvgCorrWithSPY(ta):
+    _, _, x = getCovs(ta,"SPY")
+    return x
 
 def rankLeastCorrelated(tickers,target="SPY"):
     aggr = []
