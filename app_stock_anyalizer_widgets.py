@@ -78,9 +78,9 @@ class WidgetFactory():
         gif = QLabel() 
         try: 
             filepath = args[const.WIDGET_ARG_FILEPATH]
-            movie = QMovie(filepath) 
-            gif.setMovie(movie) 
-            movie.start()
+            gif.movie = QMovie(filepath) 
+            gif.setMovie(gif.movie) 
+            gif.movie.start()
         except Exception as e:
             logger.error("unable to find gif, err={e}")
         finally:

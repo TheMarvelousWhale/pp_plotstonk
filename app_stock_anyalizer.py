@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QMainWindow
 )
-
+from PyQt5.QtGui import QMovie
 
 import yfinance as yf
 import yaml
@@ -139,10 +139,26 @@ class MainWindow(QMainWindow):
         interval = str(wc.GetWidget("dropdown_interval").currentText()) or const.DEFAULT_INTERVAL
         newData = yf.Ticker(ticker).history(period=period,interval=interval)[["High","Low","Open","Close"]]
         if len(newData) == 0:
+            self.handle_error()
             return ticker,defaultData
+        self.clear_error()
         util.logger.info(f"get new data, ticker:{ticker},period:{period},interval:{interval}, shape: {newData.shape}")
         return ticker,newData
 
+    def handle_error(self):
+        self._set_anya_gif("media/anya_scared.gif")
+    def clear_error(self):
+        self._set_anya_gif("media/anya.gif")
+        
+    def _set_anya_gif(self,path:str):
+        wc = self.widgetCtrl
+        movie = QMovie(path)
+        gif = wc.GetWidget("anya_gif")
+        gif.clear()
+        gif.setMovie(movie)
+        gif.movie = movie
+        movie.start()
+        
  
 if __name__ == "__main__":
     app = QApplication(sys.argv)
