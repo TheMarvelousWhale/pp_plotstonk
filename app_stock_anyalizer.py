@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QMainWindow
 )
-from PyQt5.QtGui import QMovie
+from PyQt5.QtGui import QMovie, QIcon
 
 import yfinance as yf
 import yaml
@@ -174,6 +174,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = MainWindow()
     w.resize(conf["window_width"],conf["window_height"])
+    w.setWindowIcon(QIcon("media/anya_icon.jpg"))
     app.exec_()
     
     
