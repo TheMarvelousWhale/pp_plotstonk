@@ -3,6 +3,8 @@ from string import Template
 YML_FILE = "app_stock_anyalizer_conf.yml"
 CSS_FILE = "app_stock_anyalizer_css.yml"
 
+
+"""Widget Type & Args"""
 WIDGET_TYPE_LABEL = "label"
 WIDGET_ARG_LABEL_NAME = "label_name"
 
@@ -31,6 +33,10 @@ WIDGET_TYPE_PUSHBTN = "push_button"
 PUSHBTN_TEXT = "push_button_text"
 FUNC = "func"
 
+
+
+
+"""Some Default values """
 DEFAULT_TICKER = "SPY"
 DEFAULT_PERIOD = "1y"
 DEFAULT_INTERVAL = "1m"
@@ -45,6 +51,10 @@ PERIOD_LIST = [
     "10y", "ytd", "max"
 ]
 
+
+
+"""Template strings"""
+
 STATS_MEAN_TMPL = Template("Mean Returns: $mean")
 STATS_SD_TMPL = Template("Std Dev: $sd")
 STAT_CORR_TMPL = Template("Corr w SPY: $corr")
@@ -52,5 +62,8 @@ STAT_CORR_TMPL = Template("Corr w SPY: $corr")
 ALERT_NORMAL_TMPL = Template("おはよう $time")
 ALERT_ERROR_TMPL = Template("WAKARANAI!! $msg")
 
+
+
+""" CSS stuff """
 CSS_DEFAULT_FONT_FAMILY = "default_font_family"
 CSS_DEFAULT_FONT_SIZE = "default_font_size"
