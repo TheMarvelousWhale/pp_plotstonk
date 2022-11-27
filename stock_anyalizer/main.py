@@ -7,10 +7,12 @@ The stock - anyalizer should have the following features:
     * avg return 
     * avg sd
     * corr with SPY 500 
-    * PE ratio
+    * PE ratio (nope)
     in tabular form 
 """
-import sys
+import sys,os
+sys.path.append(os.getcwd())
+os.chdir(os.path.join(os.getcwd(),"stock_anyalizer"))
 
 from PyQt5.QtWidgets import (
     QApplication,
@@ -22,14 +24,12 @@ from PyQt5.QtGui import QMovie, QIcon
 
 import yfinance as yf
 import yaml
-import app_stock_anyalizer_const as const
-import app_stock_anyalizer_util as util
-import app_stock_anyalizer_widgets as anya_widgets
+import  const, util, widgets
 from get_corrs import *
 
 defaultData = yf.Ticker("SPY").history(period="1y")[["High","Low","Open","Close"]]
 defaultMean, defaultSD = get_mean_sd(defaultData)
-defaultCorr = GetAvgCorrWithSPY("SPY")
+defaultCorr = getAvgCorrWithSPY("SPY")
 
 with open(const.YML_FILE) as f:
     conf = yaml.load(f, Loader=yaml.FullLoader)   
@@ -42,17 +42,17 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Stock Anya-lyzer")
         
-        self.widgetCtrl = anya_widgets.WidgetController()
+        self.widgetCtrl = widgets.WidgetController()
         wc = self.widgetCtrl
 
         sideCol = wc.Add("side_col",const.WIDGET_TYPE_WIDGET,{
             const.LAYOUT_OBJ:QVBoxLayout(),
             const.CHILD_WIDGETS:[
                 wc.Add("anya_gif",const.WIDGET_TYPE_GIF,{
-                    const.WIDGET_ARG_FILEPATH:"media/anya.gif"
+                    const.WIDGET_ARG_FILEPATH:"../media/anya.gif"
                     }),
                 wc.Add("alert_msg",const.WIDGET_TYPE_LABEL,{
-                    const.WIDGET_ARG_LABEL_NAME: const.ALERT_NORMAL_TMPL.substitute(time=util.getDay())
+                    const.WIDGET_ARG_LABEL_NAME: const.ALERT_NORMAL_TMPL.substitute(time="")
                     }),
                 wc.Add("label_ticker",const.WIDGET_TYPE_LABEL,{
                     const.WIDGET_ARG_LABEL_NAME:"Ticker"
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         graph =  wc.GetWidget("graph")
         newTicker,newData = self.get_latest_data()
         mean,sd = get_mean_sd(newData)
-        corr = GetAvgCorrWithSPY(newTicker)
+        corr = getAvgCorrWithSPY(newTicker)
         graph.canvas.axes.cla()
         graph.canvas.axes.plot(newData)
         graph.canvas.draw()
@@ -152,12 +152,12 @@ class MainWindow(QMainWindow):
         return ticker,newData
 
     def handle_error(self):
-        self._set_anya_gif("media/anya_scared.gif")
+        self._set_anya_gif("../media/anya_scared.gif")
         self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_ERROR_TMPL.substitute(msg="T^T"))
         
     def clear_error(self):
-        self._set_anya_gif("media/anya.gif")
-        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_NORMAL_TMPL.substitute(time=util.getDay()))
+        self._set_anya_gif("../media/anya.gif")
+        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_NORMAL_TMPL.substitute(time=""))
         
     def _set_anya_gif(self,path:str):
         wc = self.widgetCtrl
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = MainWindow()
     w.resize(conf["window_width"],conf["window_height"])
-    w.setWindowIcon(QIcon("media/anya_icon.jpg"))
+    w.setWindowIcon(QIcon("../media/anya_icon.jpg"))
     app.exec_()
     
     

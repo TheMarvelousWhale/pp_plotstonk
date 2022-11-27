@@ -1,7 +1,7 @@
 from string import Template 
 
-YML_FILE = "app_stock_anyalizer_conf.yml"
-CSS_FILE = "app_stock_anyalizer_css.yml"
+YML_FILE = "conf.yml"
+CSS_FILE = "css.yml"
 
 
 """Widget Type & Args"""

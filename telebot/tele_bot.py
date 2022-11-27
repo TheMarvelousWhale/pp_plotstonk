@@ -1,7 +1,12 @@
 
 # install package: python-telegram-bot
 from telegram.ext import *
-import get_corrs, tele_bot_const as const, telebot_middleware as mw
+import os,sys
+sys.path.append(os.getcwd())
+os.chdir(os.path.join(os.getcwd(),"telebot"))
+
+import get_corrs
+import tele_bot_const as const, telebot_middleware as mw
 import yaml
 from datetime import datetime
 

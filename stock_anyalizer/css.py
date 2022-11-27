@@ -1,5 +1,5 @@
 import yaml
-import app_stock_anyalizer_const as const 
+import const 
 from PyQt5.QtGui import QFont 
 
 

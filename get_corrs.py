@@ -32,7 +32,9 @@ def getCovs(ta,tb):
         return 1,1,1
     return max(x),min(x),sum(x)/len(x)
 
-def GetAvgCorrWithSPY(ta):
+
+
+def getAvgCorrWithSPY(ta):
     _, _, x = getCovs(ta,"SPY")
     return x
 

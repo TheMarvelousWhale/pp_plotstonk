@@ -7,16 +7,15 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QWidget,
 )
+from PyQt5.QtGui import QMovie
 
 import matplotlib
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from PyQt5.QtGui import QMovie, QFont
-from app_stock_anyalizer_util import logger 
-import app_stock_anyalizer_const as const 
-import app_stock_anyalizer_css as css 
+from util import logger 
+import const , css 
 
 AnyaCSS = css.AnyaStyle()
 CSSAlterableTypes = [const.WIDGET_TYPE_LABEL,
