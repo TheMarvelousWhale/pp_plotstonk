@@ -26,6 +26,8 @@ import app_stock_anyalizer_const as const
 import app_stock_anyalizer_util as util
 import app_stock_anyalizer_widgets as anya_widgets
 from get_corrs import *
+from qt_material import apply_stylesheet #, list_themes # need install
+
 
 defaultData = yf.Ticker("SPY").history(period="1y")[["High","Low","Open","Close"]]
 defaultMean, defaultSD = get_mean_sd(defaultData)
@@ -172,6 +174,7 @@ class MainWindow(QMainWindow):
  
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    apply_stylesheet(app, theme="dark_amber.xml")
     w = MainWindow()
     w.resize(conf["window_width"],conf["window_height"])
     app.exec_()
