@@ -1,7 +1,6 @@
 from string import Template 
 
 YML_FILE = "conf.yml"
-CSS_FILE = "css.yml"
 
 
 """Widget Type & Args"""
@@ -54,7 +53,6 @@ PERIOD_LIST = [
 
 
 """Template strings"""
-
 STATS_MEAN_TMPL = Template("Mean Returns: $mean")
 STATS_SD_TMPL = Template("Std Dev: $sd")
 STAT_CORR_TMPL = Template("Corr w SPY: $corr")
@@ -63,7 +61,3 @@ ALERT_NORMAL_TMPL = Template("おはよう $time")
 ALERT_ERROR_TMPL = Template("WAKARANAI!! $msg")
 
 
-
-""" CSS stuff """
-CSS_DEFAULT_FONT_FAMILY = "default_font_family"
-CSS_DEFAULT_FONT_SIZE = "default_font_size"

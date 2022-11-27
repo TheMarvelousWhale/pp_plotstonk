@@ -3,3 +3,4 @@ yfinance
 python-telegram-bot
 pyyaml
 PyQT5
+py-material

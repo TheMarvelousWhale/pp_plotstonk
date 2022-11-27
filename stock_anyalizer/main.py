@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import (
     QMainWindow
 )
 from PyQt5.QtGui import QMovie, QIcon
-
+from qt_material import apply_stylesheet 
 import yfinance as yf
 import yaml
 import  const, util, widgets
@@ -172,6 +172,7 @@ class MainWindow(QMainWindow):
  
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    apply_stylesheet(app, theme="dark_amber.xml",extra={'font_size':20})
     w = MainWindow()
     w.resize(conf["window_width"],conf["window_height"])
     w.setWindowIcon(QIcon("../media/anya_icon.jpg"))

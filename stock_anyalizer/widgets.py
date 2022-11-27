@@ -15,15 +15,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationTool
 from matplotlib.figure import Figure
 
 from util import logger 
-import const , css 
-
-AnyaCSS = css.AnyaStyle()
-CSSAlterableTypes = [const.WIDGET_TYPE_LABEL,
-                     const.WIDGET_TYPE_INPUT_BOX,
-                     const.WIDGET_TYPE_DROPDOWN,
-                     const.WIDGET_TYPE_PUSHBTN
-                     ]
-
+import const 
 
 class WidgetController():
     def __init__(self):
@@ -37,8 +29,6 @@ class WidgetController():
             return None 
         if name in self.widgets:
             logger.warn(f"widget {name} already exists")
-        if type in CSSAlterableTypes:
-            widget.setFont(AnyaCSS.GetDefaultFont())
         self.widgets[name] = widget
         return widget
 
