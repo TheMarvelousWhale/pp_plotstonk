@@ -23,7 +23,7 @@ CHILD_WIDGETS_COLUMN_RATIO = "col_ratio"
 
 WIDGET_TYPE_MPL_GRAPH = "mpl"
 MPL_PARENT_OBJ = "mpl_parent_obj"
-MPL_DATA = "mpl_data"
+PD_DATA = "mpl_data"
 MPL_GRAPH_WIDTH = "graph_width"
 MPL_GRAPH_HEIGHT = "graph_height"
 MPL_GRAPH_DPI = "graph_dpi"
@@ -32,6 +32,7 @@ WIDGET_TYPE_PUSHBTN = "push_button"
 PUSHBTN_TEXT = "push_button_text"
 FUNC = "func"
 
+WIDGET_TYPE_QTGRAPH = "qtgraph"
 
 
 
@@ -49,7 +50,8 @@ PERIOD_LIST = [
     "1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", 
     "10y", "ytd", "max"
 ]
-
+PRICE_LIST = ["High","Low","Open","Close"]
+PRICE_COLOR_LIST = ["r","b","g","y"]
 
 
 """Template strings"""
@@ -57,7 +59,9 @@ STATS_MEAN_TMPL = Template("Mean Returns: $mean")
 STATS_SD_TMPL = Template("Std Dev: $sd")
 STAT_CORR_TMPL = Template("Corr w SPY: $corr")
 
-ALERT_NORMAL_TMPL = Template("おはよう $time")
-ALERT_ERROR_TMPL = Template("WAKARANAI!! $msg")
+ALERT_NORMAL_TMPL = Template("おはよう これは $ticker のチャートです")
+ALERT_ERROR_TMPL = Template("わからない!! 私は $ticker について何も知りません")
 
 
+"""Global Config"""
+DT_FORMAT = "%Y-%m-%d"

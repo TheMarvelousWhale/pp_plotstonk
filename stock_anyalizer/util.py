@@ -1,4 +1,4 @@
-import logging
+import logging, pandas as pd
 from datetime import datetime
 
 def getDay()->str:
@@ -16,4 +16,7 @@ def wrap3F(a)->str:
     return f"{a:.3f}"
 
 
-    
+def getUnix(x):
+    if type(x[0]) == type(pd.Timestamp("2017-01-01")):
+        x = [t.timestamp() for t in x]
+    return x

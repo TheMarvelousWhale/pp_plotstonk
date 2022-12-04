@@ -8,13 +8,15 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 from PyQt5.QtGui import QMovie
+from pyqtgraph import PlotWidget
+import pyqtgraph as pg
 
 import matplotlib
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from util import logger 
+from util import logger ,getUnix
 import const 
 
 class WidgetController():
@@ -54,6 +56,8 @@ class WidgetFactory():
                 return self._create_mpl_graph(args)
             elif type == const.WIDGET_TYPE_PUSHBTN:
                 return self._create_push_button(args)
+            elif type == const.WIDGET_TYPE_QTGRAPH:
+                return self._create_qt_graph(args)
         except:
             return None 
         
@@ -114,7 +118,7 @@ class WidgetFactory():
         sc = MplGraph( width=args[const.MPL_GRAPH_WIDTH], 
                        height=args[const.MPL_GRAPH_HEIGHT], 
                        dpi=args[const.MPL_GRAPH_DPI])
-        sc.axes.plot(args[const.MPL_DATA])
+        sc.axes.plot(args[const.PD_DATA])
         toolbar = NavigationToolbar(sc, parent)
         graph = self._create_widget(
             {
@@ -125,7 +129,27 @@ class WidgetFactory():
         graph.canvas = sc 
         graph.toolbar = toolbar
         return graph
+
+    def _create_qt_graph(self,args:dict) ->QWidget:
+        w = pg.PlotWidget()
+        d = args[const.PD_DATA]
+        w.setAxisItems({'bottom':pg.DateAxisItem()})
+        w.addLegend()
         
+        for index,i in enumerate(const.PRICE_LIST):
+             self.qt_plot(w,d.index,d[i],name=i,color=const.PRICE_COLOR_LIST[index])
+        return w
+    
+    
+    
+    def qt_plot(self,w:PlotWidget,x,y,name="line",color="r"):
+        try: 
+            x = getUnix(x)
+            p = w.plot(x,y,name=name,pen=pg.mkPen(color=color))
+            setattr(w,name,p)
+        except Exception as e:
+            print(f"{e}")
+    
     def _create_push_button(self,args:dict) ->QWidget:
         pbtn = QPushButton(args[const.PUSHBTN_TEXT])
         pbtn.clicked.connect(args[const.FUNC])

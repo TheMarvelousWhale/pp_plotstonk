@@ -27,13 +27,13 @@ import yaml
 import  const, util, widgets
 from get_corrs import *
 
-defaultData = yf.Ticker("SPY").history(period="1y")[["High","Low","Open","Close"]]
+defaultTicker = "SPY"
+defaultData = yf.Ticker(defaultTicker).history(period="1y")[const.PRICE_LIST]
 defaultMean, defaultSD = get_mean_sd(defaultData)
-defaultCorr = getAvgCorrWithSPY("SPY")
+defaultCorr = getAvgCorrWithSPY(defaultTicker)
 
 with open(const.YML_FILE) as f:
     conf = yaml.load(f, Loader=yaml.FullLoader)   
-
 
 
 class MainWindow(QMainWindow):
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
         
         super().__init__()
         self.setWindowTitle("Stock Anya-lyzer")
-        
+        self._ticker = defaultTicker
         self.widgetCtrl = widgets.WidgetController()
         wc = self.widgetCtrl
 
@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
                     const.WIDGET_ARG_FILEPATH:"../media/anya.gif"
                     }),
                 wc.Add("alert_msg",const.WIDGET_TYPE_LABEL,{
-                    const.WIDGET_ARG_LABEL_NAME: const.ALERT_NORMAL_TMPL.substitute(time="")
+                    const.WIDGET_ARG_LABEL_NAME: const.ALERT_NORMAL_TMPL.substitute(ticker=self._ticker)
                     }),
                 wc.Add("label_ticker",const.WIDGET_TYPE_LABEL,{
                     const.WIDGET_ARG_LABEL_NAME:"Ticker"
@@ -83,14 +83,14 @@ class MainWindow(QMainWindow):
         graphCol = wc.Add("graph_col",const.WIDGET_TYPE_WIDGET,{
                 const.LAYOUT_OBJ:QVBoxLayout(),
                 const.CHILD_WIDGETS:[
-                    wc.Add("graph",const.WIDGET_TYPE_MPL_GRAPH,{
-                            const.LAYOUT_OBJ:QVBoxLayout(),
-                            const.MPL_PARENT_OBJ: self,
-                            const.MPL_DATA:defaultData,
-                            const.MPL_GRAPH_WIDTH: conf[const.MPL_GRAPH_WIDTH],
-                            const.MPL_GRAPH_HEIGHT: conf[const.MPL_GRAPH_HEIGHT],
-                            const.MPL_GRAPH_DPI:conf[const.MPL_GRAPH_DPI]
-                        }),
+                    # wc.Add("graph",const.WIDGET_TYPE_MPL_GRAPH,{
+                    #         const.LAYOUT_OBJ:QVBoxLayout(),
+                    #         const.MPL_PARENT_OBJ: self,
+                    #         const.PD_DATA:defaultData,
+                    #         const.MPL_GRAPH_WIDTH: conf[const.MPL_GRAPH_WIDTH],
+                    #         const.MPL_GRAPH_HEIGHT: conf[const.MPL_GRAPH_HEIGHT],
+                    #         const.MPL_GRAPH_DPI:conf[const.MPL_GRAPH_DPI]
+                    #     }),
                     wc.Add("stats_row",const.WIDGET_TYPE_WIDGET,{
                             const.LAYOUT_OBJ:QHBoxLayout(),
                             const.CHILD_WIDGETS:[
@@ -104,7 +104,10 @@ class MainWindow(QMainWindow):
                                         const.WIDGET_ARG_LABEL_NAME:const.STAT_CORR_TMPL.substitute(corr=util.wrap3F(defaultCorr))
                                     })
                             ]
-                        })
+                        }), 
+                    wc.Add("qtgraph",const.WIDGET_TYPE_QTGRAPH, {
+                        const.PD_DATA:defaultData
+                    })
                     ]
                 }
             )
@@ -125,13 +128,18 @@ class MainWindow(QMainWindow):
 
         # Trigger the canvas to update and redraw.
         wc = self.widgetCtrl
-        graph =  wc.GetWidget("graph")
+        graph =  wc.GetWidget("qtgraph")
         newTicker,newData = self.get_latest_data()
+
         mean,sd = get_mean_sd(newData)
         corr = getAvgCorrWithSPY(newTicker)
-        graph.canvas.axes.cla()
-        graph.canvas.axes.plot(newData)
-        graph.canvas.draw()
+        # graph.canvas.axes.cla()
+        # graph.canvas.axes.plot(newData)
+        # graph.canvas.draw()
+        xAxis = util.getUnix(newData.index)
+        for priceType in const.PRICE_LIST:
+            attr = getattr(graph,priceType)
+            attr.setData(xAxis,newData[priceType])
         wc.GetWidget("mean").setText(const.STATS_MEAN_TMPL.substitute(mean=util.wrap3F(mean)))
         wc.GetWidget("sd").setText(const.STATS_SD_TMPL.substitute(sd=util.wrap3F(sd)))
         wc.GetWidget("corr").setText(const.STAT_CORR_TMPL.substitute(corr=util.wrap3F(corr)))
@@ -141,9 +149,10 @@ class MainWindow(QMainWindow):
     def get_latest_data(self):
         wc = self.widgetCtrl
         ticker = str(wc.GetWidget("input_ticker").text()) or const.DEFAULT_TICKER 
+        self._ticker = ticker
         period = str(wc.GetWidget("dropdown_period").currentText()) or const.DEFAULT_PERIOD.text()
         interval = str(wc.GetWidget("dropdown_interval").currentText()) or const.DEFAULT_INTERVAL
-        newData = yf.Ticker(ticker).history(period=period,interval=interval)[["High","Low","Open","Close"]]
+        newData = yf.Ticker(ticker).history(period=period,interval=interval)[const.PRICE_LIST]
         if len(newData) == 0:
             self.handle_error()
             return ticker,defaultData
@@ -153,11 +162,11 @@ class MainWindow(QMainWindow):
 
     def handle_error(self):
         self._set_anya_gif("../media/anya_scared.gif")
-        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_ERROR_TMPL.substitute(msg="T^T"))
+        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_ERROR_TMPL.substitute(ticker=self._ticker))
         
     def clear_error(self):
         self._set_anya_gif("../media/anya.gif")
-        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_NORMAL_TMPL.substitute(time=""))
+        self.widgetCtrl.GetWidget("alert_msg").setText(const.ALERT_NORMAL_TMPL.substitute(ticker=self._ticker))
         
     def _set_anya_gif(self,path:str):
         wc = self.widgetCtrl
